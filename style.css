@@ -1,0 +1,99 @@
+<style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-page: #f5f0e6;       
+            --card-bg: #ffffff;        
+            --border-light: #e7e0d2;    
+            --accent-chocolate: #4a3728; 
+            --accent-coffee: #634832;
+            --text-primary: #2d2219;     
+            --text-secondary: #5e4b3a;
+            --error-bg: #f9e6e2;
+            --error-border: #c47a6b;
+            --error-text: #9b4a3a;
+            --priority-high: #b45f5f;    
+            --priority-medium: #d4a373;   
+            --priority-low: #b2a18b;      
+            --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.03), 0 1px 2px rgba(0, 0, 0, 0.05);
+            --shadow-hover: 0 12px 24px -8px rgba(0, 0, 0, 0.1), 0 2px 4px rgba(0, 0, 0, 0.02);
+            --transition: all 0.25s cubic-bezier(0.2, 0, 0, 1);
+        }
+
+        body {
+            background-color: var(--bg-page);
+            font-family: 'Fira Code', 'Courier New', 'SF Mono', monospace;
+            color: var(--text-primary);
+            line-height: 1.45;
+            padding: 2rem 1.5rem;
+            min-height: 100vh;
+        }
+
+        .app-container {
+            max-width: 1440px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .hero {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            flex-wrap: wrap;
+            border-bottom: 1px solid var(--border-light);
+            padding-bottom: 1rem;
+            margin-bottom: 0.5rem;
+            gap: 1rem;
+        }
+        .hero-left h1 {
+            font-size: 1.8rem;
+            font-weight: 500;
+            letter-spacing: -0.5px;
+            color: var(--accent-chocolate);
+            display: flex;
+            align-items: baseline;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .hero-left h1 span {
+            font-size: 0.85rem;
+            font-weight: 400;
+            background: #eae2d4;
+            padding: 0.2rem 0.8rem;
+            border-radius: 30px;
+            color: var(--text-secondary);
+        }
+        .hero-sub {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            margin-top: 0.5rem;
+        }
+        .role-selector {
+            background: var(--card-bg);
+            border: 1px solid var(--border-light);
+            border-radius: 40px;
+            padding: 0.4rem 0.8rem;
+            font-family: monospace;
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: var(--accent-chocolate);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        .role-selector:focus {
+            outline: none;
+            border-color: var(--accent-coffee);
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 1fr 1.8fr;
+            gap: 2rem;
+            align-items: start;
+        }
