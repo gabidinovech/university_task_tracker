@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>AlmaU Task Tracker | корпоративный дашборд</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-page: #f5f0e6;        /* мягкий бежевый фон */
+            --card-bg: #ffffff;         /* кремово-белый для карточек */
+            --border-light: #e7e0d2;    /* кофейная граница */
+            --accent-chocolate: #4a3728; /* глубокий шоколадный */
+            --accent-coffee: #634832;
+            --text-primary: #2d2219;     /* тёмно-коричневый антрацит */
+            --text-secondary: #5e4b3a;
+            --error-bg: #f9e6e2;
+            --error-border: #c47a6b;
+            --error-text: #9b4a3a;
+            --priority-high: #b45f5f;    /* терракотово-приглушённый */
+            --priority-medium: #d4a373;   /* горчичный, тёплый */
+            --priority-low: #b2a18b;      /* серо-коричневый, деликатный */
+            --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.03), 0 1px 2px rgba(0, 0, 0, 0.05);
+            --shadow-hover: 0 12px 24px -8px rgba(0, 0, 0, 0.1), 0 2px 4px rgba(0, 0, 0, 0.02);
+            --transition: all 0.25s cubic-bezier(0.2, 0, 0, 1);
+        }
+
+        body {
+            background-color: var(--bg-page);
+            font-family: 'Fira Code', 'Courier New', 'SF Mono', monospace;
+            color: var(--text-primary);
+            line-height: 1.45;
+            padding: 2rem 1.5rem;
+            min-height: 100vh;
+        }
+
+        .app-container {
+            max-width: 1440px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .hero {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            flex-wrap: wrap;
+            border-bottom: 1px solid var(--border-light);
+            padding-bottom: 1rem;
+            margin-bottom: 0.5rem;
+            gap: 1rem;
+        }
+        .hero-left h1 {
+            font-size: 1.8rem;
+            font-weight: 500;
+            letter-spacing: -0.5px;
+            color: var(--accent-chocolate);
+            display: flex;
+            align-items: baseline;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .hero-left h1 span {
+            font-size: 0.85rem;
+            font-weight: 400;
+            background: #eae2d4;
+            padding: 0.2rem 0.8rem;
+            border-radius: 30px;
+            color: var(--text-secondary);
+        }
+        .hero-sub {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            margin-top: 0.5rem;
+        }
+        .role-selector {
+            background: var(--card-bg);
+            border: 1px solid var(--border-light);
+            border-radius: 40px;
+            padding: 0.4rem 0.8rem;
+            font-family: monospace;
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: var(--accent-chocolate);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        .role-selector:focus {
+            outline: none;
+            border-color: var(--accent-coffee);
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 1fr 1.8fr;
+            gap: 2rem;
+            align-items: start;
+        }
+
+        .create-card, .employee-placeholder {
+            background: var(--card-bg);
+            border: 1px solid var(--border-light);
+            border-radius: 24px;
+            padding: 1.6rem;
+            box-shadow: var(--shadow-sm);
+            transition: var(--transition);
+        }
+        .create-card:hover {
+            box-shadow: var(--shadow-hover);
+        }
+        .employee-placeholder {
+            text-align: center;
+            color: var(--text-secondary);
+            padding: 2rem 1rem;
+        }
+        .employee-placeholder p {
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+        }
+        .form-title {
+            font-size: 1.2rem;
+            font-weight: 500;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border-left: 3px solid var(--accent-coffee);
+            padding-left: 12px;
+        }
+        .input-group {
+            margin-bottom: 1.25rem;
+        }
+        label {
+            display: block;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            margin-bottom: 0.4rem;
+        }
+        input, textarea {
+            width: 100%;
+            background: #fffef9;
+            border: 1px solid var(--border-light);
+            border-radius: 14px;
+            padding: 0.75rem 1rem;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.9rem;
+            color: var(--text-primary);
+            transition: var(--transition);
+        }
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: var(--accent-chocolate);
+            box-shadow: 0 0 0 2px rgba(74, 55, 40, 0.1);
+        }
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+        .priority-toggle {
+            display: flex;
+            gap: 12px;
+            margin-top: 6px;
+        }
+        .priority-btn {
+            flex: 1;
+            background: transparent;
+            border: 1px solid var(--border-light);
+            border-radius: 40px;
+            padding: 0.6rem 0;
+            font-family: monospace;
+            font-weight: 500;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: var(--transition);
+            text-align: center;
+        }
+        .priority-btn.active {
+            background: var(--accent-chocolate);
+            border-color: var(--accent-chocolate);
+            color: #fef7ed;
+        }
+        .btn-submit {
+            width: 100%;
+            background: var(--accent-chocolate);
+            color: #fef5e8;
+            border: none;
+            border-radius: 40px;
+            padding: 0.8rem;
+            font-family: monospace;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            margin-top: 0.5rem;
+        }
+        .btn-submit:hover {
+            background: #2f2118;
+            transform: translateY(-1px);
+        }
+
+        .tasks-panel {
+            background: var(--card-bg);
+            border: 1px solid var(--border-light);
+            border-radius: 24px;
+            padding: 1.6rem;
+            box-shadow: var(--shadow-sm);
+        }
+        .stats-row {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.8rem;
+            flex-wrap: wrap;
+        }
+        .stat-card {
+            flex: 1;
+            background: #fefaf5;
+            border-radius: 20px;
+            padding: 1rem 0.8rem;
+            text-align: center;
+            border: 1px solid var(--border-light);
+            transition: var(--transition);
+        }
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 600;
+            color: var(--accent-chocolate);
+            line-height: 1.2;
+        }
+        .stat-label {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-secondary);
+            margin-top: 0.3rem;
+        }
+        .filter-tabs {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin-bottom: 1.8rem;
+            border-bottom: 1px solid var(--border-light);
+            padding-bottom: 0.8rem;
+        }
+        .tab-btn {
+            background: transparent;
+            border: none;
+            font-family: monospace;
+            font-size: 0.85rem;
+            padding: 0.5rem 1.2rem;
+            border-radius: 100px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        .tab-btn.active {
+            background: var(--accent-chocolate);
+            color: #fff7ed;
+        }
+        .tasks-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            min-height: 280px;
+        }
+        .task-card {
+            background: #fefcf8;
+            border: 1px solid var(--border-light);
+            border-radius: 20px;
+            padding: 1rem;
+            transition: var(--transition);
+            animation: fadeSlideUp 0.2s ease-out;
+            box-shadow: var(--shadow-sm);
+            display: flex;
+            flex-direction: column;
+            gap: 0.7rem;
+        }
+        .task-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-hover);
+            border-color: #d6ccbc;
+        }
+        .task-card.priority-high { border-left: 4px solid var(--priority-high); }
+        .task-card.priority-medium { border-left: 4px solid var(--priority-medium); }
+        .task-card.priority-low { border-left: 4px solid var(--priority-low); }
+
+        .task-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+        .task-title {
+            font-weight: 600;
+            font-size: 1.05rem;
+            color: var(--accent-chocolate);
+        }
+        .task-priority-badge {
+            font-size: 0.7rem;
+            background: #f3ede5;
+            padding: 0.2rem 0.7rem;
+            border-radius: 40px;
+            color: var(--text-secondary);
+        }
+        .task-description {
+            font-size: 0.85rem;
+            color: #4f3f31;
+            line-height: 1.4;
+        }
+        .task-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+        }
+        .status-select {
+            background: #fffaf2;
+            border: 1px solid var(--border-light);
+            border-radius: 30px;
+            padding: 0.3rem 0.7rem;
+            font-size: 0.75rem;
+            font-family: monospace;
+            cursor: pointer;
+            color: var(--text-primary);
+        }
+        .delete-btn {
+            background: transparent;
+            border: none;
+            font-family: monospace;
+            font-size: 0.8rem;
+            color: #9b7e66;
+            cursor: pointer;
+            transition: var(--transition);
+            padding: 0.2rem 0.5rem;
+            border-radius: 30px;
+        }
+        .delete-btn:hover {
+            color: #c95a4a;
+            background: #f9ece8;
+        }
+        .error-banner {
+            background: var(--error-bg);
+            border-left: 4px solid var(--error-border);
+            border-radius: 16px;
+            padding: 0.8rem 1rem;
+            margin-bottom: 1.2rem;
+            font-size: 0.8rem;
+            color: var(--error-text);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .loader-message, .empty-message {
+            text-align: center;
+            padding: 2rem;
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+        }
+        .empty-message {
+            background: #fefaf5;
+            border-radius: 32px;
+            color: #a28f7a;
+            font-style: italic;
+        }
+        .status-footer {
+            margin-top: 2rem;
+            border-top: 1px solid var(--border-light);
+            padding-top: 1.2rem;
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+            text-align: center;
+            font-family: monospace;
+        }
+        @keyframes fadeSlideUp {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @media (max-width: 780px) {
+            body { padding: 1rem; }
+            .dashboard-grid { grid-template-columns: 1fr; gap: 1.5rem; }
+            .hero-left h1 { font-size: 1.5rem; }
+        }
+    </style>
+</head>
+<body>
+<div class="app-container">
+    <div class="hero">
+        <div class="hero-left">
+            <h1>📋 AlmaU Task Tracker <span>v.dashboard</span></h1>
+            <div class="hero-sub">управление задачами • приоритеты • ролевой доступ</div>
+        </div>
+        <div>
+            <select id="roleSelector" class="role-selector">
+                <option value="admin">👑 Администратор</option>
+                <option value="employee">👤 Сотрудник</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="dashboard-grid">
+        <div id="leftPanelContainer">
+            <div id="createTaskForm" class="create-card">
+                <div class="form-title">✎ Новая задача</div>
+                <div class="input-group">
+                    <label>НАЗВАНИЕ</label>
+                    <input type="text" id="taskTitleInput" placeholder="например: Подготовить отчёт" autocomplete="off">
+                </div>
+                <div class="input-group">
+                    <label>ОПИСАНИЕ</label>
+                    <textarea id="taskDescInput" placeholder="детали, контекст, дедлайны..."></textarea>
+                </div>
+                <div class="input-group">
+                    <label>ПРИОРИТЕТ</label>
+                    <div class="priority-toggle" id="priorityToggle">
+                        <button type="button" data-priority="Low" class="priority-btn">LOW</button>
+                        <button type="button" data-priority="Medium" class="priority-btn active">MEDIUM</button>
+                        <button type="button" data-priority="High" class="priority-btn">HIGH</button>
+                    </div>
+                </div>
+                <button class="btn-submit" id="createTaskBtn">➕ СОЗДАТЬ ЗАДАЧУ</button>
+            </div>
+            <div id="employeePlaceholder" class="employee-placeholder" style="display: none;">
+                <span>🔒</span>
+                <p>Доступно только для Администратора<br>Создание и удаление задач требуют прав администратора.</p>
+            </div>
+        </div>
+
+        <div class="tasks-panel">
+            <!-- Панель статистики (динамическая) -->
+            <div class="stats-row" id="statsPanel">
+                <div class="stat-card"><div class="stat-number" id="totalTasksCount">0</div><div class="stat-label">Всего задач</div></div>
+                <div class="stat-card"><div class="stat-number" id="inProgressCount">0</div><div class="stat-label">В работе (In Progress)</div></div>
+                <div class="stat-card"><div class="stat-number" id="doneCount">0</div><div class="stat-label">Выполнено (Done)</div></div>
+            </div>
+
+            <div class="filter-tabs" id="filterTabs">
+                <button data-filter="All" class="tab-btn active">Все</button>
+                <button data-filter="New" class="tab-btn">New</button>
+                <button data-filter="In Progress" class="tab-btn">In Progress</button>
+                <button data-filter="Done" class="tab-btn">Done</button>
+            </div>
+            <div id="globalErrorContainer"></div>
+            <div id="tasksList" class="tasks-list">
+                <div class="loader-message">⟳ СИНХРОНИЗАЦИЯ С СЕРВЕРОМ...</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="status-footer">
+        CORE: FastAPI v7.0 // STATION: LOCALHOST // DATABASE: SQLITE_READY
+    </div>
+</div>
+
+<script>
+    const API_BASE = 'http://127.0.0.1:8000/tasks';
+    let tasksArray = [];           // все задачи
+    let currentFilter = 'All';
+    let selectedPriority = 'Medium';
+    let userRole = 'admin';        // 'admin' или 'employee'
+
+    const tasksContainer = document.getElementById('tasksList');
+    const errorContainer = document.getElementById('globalErrorContainer');
+    const titleInput = document.getElementById('taskTitleInput');
+    const descInput = document.getElementById('taskDescInput');
+    const createBtn = document.getElementById('createTaskBtn');
+    const priorityBtns = document.querySelectorAll('.priority-btn');
+    const filterTabs = document.querySelectorAll('.tab-btn');
+    const roleSelector = document.getElementById('roleSelector');
+    const createTaskFormDiv = document.getElementById('createTaskForm');
+    const employeePlaceholderDiv = document.getElementById('employeePlaceholder');
+    const totalTasksSpan = document.getElementById('totalTasksCount');
+    const inProgressSpan = document.getElementById('inProgressCount');
+    const doneSpan = document.getElementById('doneCount');
+
+    function updateStatistics() {
+        const total = tasksArray.length;
+        const inProgress = tasksArray.filter(t => t.status === 'In Progress').length;
+        const done = tasksArray.filter(t => t.status === 'Done').length;
+        totalTasksSpan.textContent = total;
+        inProgressSpan.textContent = inProgress;
+        doneSpan.textContent = done;
+    }
+
+    function applyRoleBasedUI() {
+        if (userRole === 'admin') {
+            createTaskFormDiv.style.display = 'block';
+            employeePlaceholderDiv.style.display = 'none';
+        } else {
+            createTaskFormDiv.style.display = 'none';
+            employeePlaceholderDiv.style.display = 'flex';
+        }
+    }
+
+    function initRoleSwitcher() {
+        roleSelector.addEventListener('change', (e) => {
+            userRole = e.target.value;
+            applyRoleBasedUI();
+        });
+    }
+
+    function showError(message) {
+        errorContainer.innerHTML = `<div class="error-banner">⚠️ ${message}</div>`;
+        setTimeout(() => {
+            if (errorContainer.innerHTML.includes(message)) errorContainer.innerHTML = '';
+        }, 5000);
+    }
+
+    function clearError() { errorContainer.innerHTML = ''; }
+
+    function setLoadingState(isLoading, customMessage = "СИНХРОНИЗАЦИЯ С СЕРВЕРОМ...") {
+        if (isLoading) tasksContainer.innerHTML = `<div class="loader-message">⟳ ${customMessage}</div>`;
+    }
+
+    function escapeHtml(str) {
+        if (!str) return '';
+        return str.replace(/[&<>]/g, function(m) {
+            if (m === '&') return '&amp;';
+            if (m === '<') return '&lt;';
+            if (m === '>') return '&gt;';
+            return m;
+        });
+    }
+
+    function renderTasks() {
+        let filteredTasks = tasksArray;
+        if (currentFilter !== 'All') {
+            filteredTasks = tasksArray.filter(task => task.status === currentFilter);
+        }
+        if (filteredTasks.length === 0) {
+            tasksContainer.innerHTML = `<div class="empty-message">📭 НЕТ ЗАДАЧ. СОЗДАЙТЕ НОВУЮ.</div>`;
+            updateStatistics();
+            return;
+        }
+        const tasksHtml = filteredTasks.map(task => {
+            let priorityClass = '';
+            if (task.priority === 'High') priorityClass = 'priority-high';
+            else if (task.priority === 'Medium') priorityClass = 'priority-medium';
+            else priorityClass = 'priority-low';
+            const priorityText = task.priority === 'High' ? '🔴 HIGH' : (task.priority === 'Medium' ? '🟠 MEDIUM' : '🟢 LOW');
+            return `
+                <div class="task-card ${priorityClass}" data-task-id="${task.id}">
+                    <div class="task-header">
+                        <div class="task-title">${escapeHtml(task.title)}</div>
+                        <div class="task-priority-badge">${priorityText}</div>
+                    </div>
+                    <div class="task-description">${escapeHtml(task.description || '— без описания —')}</div>
+                    <div class="task-meta">
+                        <select class="status-select" data-id="${task.id}" data-current-status="${task.status}">
+                            <option value="New" ${task.status === 'New' ? 'selected' : ''}>🟡 New</option>
+                            <option value="In Progress" ${task.status === 'In Progress' ? 'selected' : ''}>⚙️ In Progress</option>
+                            <option value="Done" ${task.status === 'Done' ? 'selected' : ''}>✅ Done</option>
+                        </select>
+                        <button class="delete-btn" data-id="${task.id}">[ Удалить ]</button>
+                    </div>
+                </div>
+            `;
+        }).join('');
+        tasksContainer.innerHTML = tasksHtml;
+
+        document.querySelectorAll('.status-select').forEach(select => {
+            select.removeEventListener('change', handleStatusChange);
+            select.addEventListener('change', handleStatusChange);
+        });
+        document.querySelectorAll('.delete-btn').forEach(btn => {
+            btn.removeEventListener('click', handleDeleteClick);
+            btn.addEventListener('click', handleDeleteClick);
+        });
+        updateStatistics();   // пересчёт после любого рендера
+    }
+
+    async function handleStatusChange(event) {
+        const selectEl = event.target;
+        const taskId = parseInt(selectEl.getAttribute('data-id'));
+        const newStatus = selectEl.value;
+        const originalTask = tasksArray.find(t => t.id === taskId);
+        if (!originalTask || originalTask.status === newStatus) return;
+        const oldStatus = originalTask.status;
+        originalTask.status = newStatus;
+        renderTasks(); // оптимистичный рендер
+        try {
+            const response = await fetch(`${API_BASE}/${taskId}`, {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ status: newStatus })
+            });
+            if (!response.ok) throw new Error(`HTTP ${response.status}`);
+            const updated = await response.json();
+            const idx = tasksArray.findIndex(t => t.id === taskId);
+            if (idx !== -1 && updated) tasksArray[idx] = { ...tasksArray[idx], ...updated };
+            renderTasks();
+            clearError();
+        } catch (err) {
+            originalTask.status = oldStatus;
+            renderTasks();
+            showError(`Ошибка обновления статуса: ${err.message}. Сервер недоступен?`);
+        }
+    }
+
+    async function handleDeleteClick(event) {
+        const btn = event.target;
+        const taskId = parseInt(btn.getAttribute('data-id'));
+        if (!taskId) return;
+        // проверка роли: если сотрудник — удаление запрещено
+        if (userRole !== 'admin') {
+            showError("У вас недостаточно прав. Удаление задач доступно только Администратору.");
+            return;
+        }
+        try {
+            const response = await fetch(`${API_BASE}/${taskId}`, { method: 'DELETE' });
+            if (!response.ok && response.status !== 200 && response.status !== 204) {
+                throw new Error(`DELETE error ${response.status}`);
+            }
+            await loadTasks(); // полная перезагрузка после удаления
+            clearError();
+        } catch (err) {
+            showError(`Не удалось удалить задачу. Связь с сервером потеряна: ${err.message}`);
+        }
+    }
+
+    async function loadTasks() {
+        setLoadingState(true, "СИНХРОНИЗАЦИЯ С СЕРВЕРОМ...");
+        clearError();
+        try {
+            const response = await fetch(API_BASE);
+            if (!response.ok) throw new Error(`HTTP ${response.status}`);
+            const data = await response.json();
+            if (Array.isArray(data)) {
+                tasksArray = data.map(task => ({
+                    id: task.id,
+                    title: task.title || 'Без названия',
+                    description: task.description || '',
+                    priority: task.priority || 'Medium',
+                    status: task.status || 'New'
+                }));
+            } else {
+                tasksArray = [];
+                throw new Error('Неверный формат ответа');
+            }
+            renderTasks();
+        } catch (error) {
+            tasksArray = [];
+            renderTasks();
+            showError('⚠️ СВЯЗЬ С СЕРВЕРОМ ПОТЕРЯНА. Включите Uvicorn на порту 8000');
+        }
+    }
+
+    async function createTask() {
+        if (userRole !== 'admin') {
+            showError("Доступ запрещён. Только администратор может создавать задачи.");
+            return;
+        }
+        const title = titleInput.value.trim();
+        if (!title) {
+            showError('❌ Название задачи обязательно.');
+            return;
+        }
+        const description = descInput.value.trim();
+        const priority = selectedPriority;
+        const newTask = { title, description, priority, status: 'New' };
+        try {
+            const response = await fetch(API_BASE, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(newTask)
+            });
+            if (!response.ok) {
+                let detail = '';
+                try { const errData = await response.json(); detail = errData.detail || ''; } catch(e) {}
+                throw new Error(`Ошибка ${response.status}: ${detail}`);
+            }
+            titleInput.value = '';
+            descInput.value = '';
+            setActivePriority('Medium');
+            await loadTasks();   // обновляем список + статистика
+            clearError();
+        } catch (error) {
+            showError(`Ошибка создания: ${error.message}. Сервер недоступен.`);
+        }
+    }
+
+    function setActivePriority(priority) {
+        selectedPriority = priority;
+        priorityBtns.forEach(btn => {
+            const p = btn.getAttribute('data-priority');
+            if (p === priority) btn.classList.add('active');
+            else btn.classList.remove('active');
+        });
+    }
+
+    function initPriorityButtons() {
+        priorityBtns.forEach(btn => {
+            btn.addEventListener('click', () => setActivePriority(btn.getAttribute('data-priority')));
+        });
+        setActivePriority('Medium');
+    }
+
+    function initFilterTabs() {
+        filterTabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                const filterValue = tab.getAttribute('data-filter');
+                currentFilter = filterValue;
+                filterTabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                renderTasks();   // перерисовка без запроса
+            });
+        });
+    }
+
+    async function init() {
+        initPriorityButtons();
+        initFilterTabs();
+        initRoleSwitcher();
+        createBtn.addEventListener('click', createTask);
+        applyRoleBasedUI();        // установить видимость по умолчанию (admin)
+        await loadTasks();         // первая загрузка с индикатором
+    }
+    init();
+</script>
+</body>
+</html>
