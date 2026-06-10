@@ -24,7 +24,6 @@ app.add_middleware(
 )
 
 def get_db():
-    """Генератор сессий базы данных. Закрывает сессию после использования."""
     db = SessionLocal()
     try:
         yield db
@@ -51,10 +50,7 @@ class TaskResponse(BaseModel):
 
 @app.get("/tasks", response_model=List[TaskResponse])
 def get_tasks(db: Session = Depends(get_db)):
-    """
-    Получить список всех задач.
-    Возвращает массив задач с полями id, title, description, status, priority, user_id.
-    """
+
     tasks = db.query(Task).all()
     return tasks
 
@@ -83,10 +79,7 @@ def create_task(task_data: TaskCreate, db: Session = Depends(get_db)):
 
 @app.delete("/tasks/{task_id}", status_code=status.HTTP_204_NO_CONTENT)
 def delete_task(task_id: int, db: Session = Depends(get_db)):
-    """
-    Удалить задачу по её ID.
-    Возвращает статус 204 No Content при успехе, иначе 404.
-    """
+
     task = db.query(Task).filter(Task.id == task_id).first()
     if not task:
         raise HTTPException(status_code=404, detail="Задача не найдена")
