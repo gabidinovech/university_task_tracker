@@ -1,9 +1,10 @@
+
 <!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>AlmaU Task Tracker | корпоративный дашборд</title>
+    <title>AlmaU Task Tracker | профессиональный дашборд</title>
     <style>
         * {
             margin: 0;
@@ -12,89 +13,183 @@
         }
 
         :root {
-            --bg-page: #f5f0e6;        /* мягкий бежевый фон */
-            --card-bg: #ffffff;         /* кремово-белый для карточек */
-            --border-light: #e7e0d2;    /* кофейная граница */
-            --accent-chocolate: #4a3728; /* глубокий шоколадный */
+            --bg-page: #f9f6f0;
+            --card-bg: #ffffff;
+            --border-light: #e9e2d4;
+            --accent-chocolate: #4a3728;
             --accent-coffee: #634832;
-            --text-primary: #2d2219;     /* тёмно-коричневый антрацит */
-            --text-secondary: #5e4b3a;
-            --error-bg: #f9e6e2;
-            --error-border: #c47a6b;
-            --error-text: #9b4a3a;
-            --priority-high: #b45f5f;    /* терракотово-приглушённый */
-            --priority-medium: #d4a373;   /* горчичный, тёплый */
-            --priority-low: #b2a18b;      /* серо-коричневый, деликатный */
-            --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.03), 0 1px 2px rgba(0, 0, 0, 0.05);
-            --shadow-hover: 0 12px 24px -8px rgba(0, 0, 0, 0.1), 0 2px 4px rgba(0, 0, 0, 0.02);
+            --accent-soft: #8b7355;
+            --text-primary: #2c241a;
+            --text-secondary: #6b5a4a;
+            --error-bg: #fef3f0;
+            --error-border: #d99e8e;
+            --error-text: #b45a48;
+            --priority-high: #c97e5a;
+            --priority-medium: #e0b48c;
+            --priority-low: #bcae8e;
+            --shadow-sm: 0 8px 20px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.03);
+            --shadow-hover: 0 20px 32px -12px rgba(0, 0, 0, 0.12), 0 2px 4px rgba(0, 0, 0, 0.02);
             --transition: all 0.25s cubic-bezier(0.2, 0, 0, 1);
+            --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            --font-mono: 'Fira Code', 'SF Mono', 'Courier New', monospace;
         }
 
         body {
             background-color: var(--bg-page);
-            font-family: 'Fira Code', 'Courier New', 'SF Mono', monospace;
+            font-family: var(--font-sans);
             color: var(--text-primary);
-            line-height: 1.45;
+            line-height: 1.5;
             padding: 2rem 1.5rem;
             min-height: 100vh;
+        }
+
+        .hidden {
+            display: none !important;
         }
 
         .app-container {
             max-width: 1440px;
             margin: 0 auto;
-            display: flex;
-            flex-direction: column;
-            gap: 2rem;
         }
 
-        .hero {
+        .auth-wrapper {
             display: flex;
-            justify-content: space-between;
-            align-items: flex-end;
-            flex-wrap: wrap;
-            border-bottom: 1px solid var(--border-light);
-            padding-bottom: 1rem;
-            margin-bottom: 0.5rem;
+            justify-content: center;
+            align-items: center;
+            min-height: 80vh;
+        }
+        .auth-card {
+            background: var(--card-bg);
+            border-radius: 32px;
+            box-shadow: var(--shadow-sm);
+            width: 100%;
+            max-width: 460px;
+            padding: 2rem;
+            border: 1px solid var(--border-light);
+            transition: var(--transition);
+        }
+        .auth-tabs {
+            display: flex;
             gap: 1rem;
+            margin-bottom: 2rem;
+            border-bottom: 1px solid var(--border-light);
+            padding-bottom: 0.5rem;
         }
-        .hero-left h1 {
-            font-size: 1.8rem;
+        .auth-tab {
+            background: none;
+            border: none;
+            font-size: 1rem;
             font-weight: 500;
-            letter-spacing: -0.5px;
+            padding: 0.5rem 0;
+            cursor: pointer;
+            color: var(--text-secondary);
+            transition: var(--transition);
+            font-family: var(--font-sans);
+        }
+        .auth-tab.active {
             color: var(--accent-chocolate);
-            display: flex;
-            align-items: baseline;
-            gap: 12px;
-            flex-wrap: wrap;
+            border-bottom: 2px solid var(--accent-chocolate);
+            margin-bottom: -0.5rem;
         }
-        .hero-left h1 span {
-            font-size: 0.85rem;
-            font-weight: 400;
-            background: #eae2d4;
-            padding: 0.2rem 0.8rem;
-            border-radius: 30px;
-            color: var(--text-secondary);
+        .input-group {
+            margin-bottom: 1.25rem;
         }
-        .hero-sub {
+        label {
+            display: block;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
             color: var(--text-secondary);
-            font-size: 0.85rem;
+            margin-bottom: 0.4rem;
+        }
+        input, select {
+            width: 100%;
+            background: #fffefb;
+            border: 1px solid var(--border-light);
+            border-radius: 20px;
+            padding: 0.85rem 1rem;
+            font-size: 0.95rem;
+            font-family: var(--font-sans);
+            transition: var(--transition);
+            color: var(--text-primary);
+        }
+        select {
+            cursor: pointer;
+        }
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--accent-chocolate);
+            box-shadow: 0 0 0 3px rgba(74, 55, 40, 0.1);
+        }
+        .btn-primary {
+            width: 100%;
+            background: var(--accent-chocolate);
+            color: white;
+            border: none;
+            border-radius: 40px;
+            padding: 0.85rem;
+            font-weight: 600;
+            font-size: 0.95rem;
+            font-family: var(--font-sans);
+            cursor: pointer;
+            transition: var(--transition);
             margin-top: 0.5rem;
         }
-        .role-selector {
-            background: var(--card-bg);
-            border: 1px solid var(--border-light);
-            border-radius: 40px;
-            padding: 0.4rem 0.8rem;
-            font-family: monospace;
+        .btn-primary:hover {
+            background: #2f2118;
+            transform: translateY(-1px);
+        }
+        .error-banner {
+            background: var(--error-bg);
+            border-left: 4px solid var(--error-border);
+            border-radius: 16px;
+            padding: 0.75rem 1rem;
             font-size: 0.8rem;
-            font-weight: 500;
+            color: var(--error-text);
+            margin-top: 1rem;
+        }
+
+        .main-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border-light);
+        }
+        .logo h1 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            letter-spacing: -0.5px;
             color: var(--accent-chocolate);
+        }
+        .logo p {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            font-family: var(--font-mono);
+        }
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            background: var(--card-bg);
+            padding: 0.5rem 1rem;
+            border-radius: 60px;
+            border: 1px solid var(--border-light);
+        }
+        .logout-btn {
+            background: none;
+            border: none;
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            color: var(--accent-soft);
             cursor: pointer;
             transition: var(--transition);
         }
-        .role-selector:focus {
-            outline: none;
-            border-color: var(--accent-coffee);
+        .logout-btn:hover {
+            color: var(--error-text);
         }
 
         .dashboard-grid {
@@ -107,188 +202,107 @@
         .create-card, .employee-placeholder {
             background: var(--card-bg);
             border: 1px solid var(--border-light);
-            border-radius: 24px;
-            padding: 1.6rem;
+            border-radius: 28px;
+            padding: 1.8rem;
             box-shadow: var(--shadow-sm);
-            transition: var(--transition);
-        }
-        .create-card:hover {
-            box-shadow: var(--shadow-hover);
-        }
-        .employee-placeholder {
-            text-align: center;
-            color: var(--text-secondary);
-            padding: 2rem 1rem;
-        }
-        .employee-placeholder p {
-            font-size: 0.9rem;
-            margin-top: 0.5rem;
         }
         .form-title {
             font-size: 1.2rem;
-            font-weight: 500;
+            font-weight: 600;
             margin-bottom: 1.5rem;
             display: flex;
             align-items: center;
-            gap: 8px;
-            border-left: 3px solid var(--accent-coffee);
-            padding-left: 12px;
-        }
-        .input-group {
-            margin-bottom: 1.25rem;
-        }
-        label {
-            display: block;
-            font-size: 0.75rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            font-weight: 500;
-            color: var(--text-secondary);
-            margin-bottom: 0.4rem;
-        }
-        input, textarea {
-            width: 100%;
-            background: #fffef9;
-            border: 1px solid var(--border-light);
-            border-radius: 14px;
-            padding: 0.75rem 1rem;
-            font-family: 'Fira Code', monospace;
-            font-size: 0.9rem;
-            color: var(--text-primary);
-            transition: var(--transition);
-        }
-        input:focus, textarea:focus {
-            outline: none;
-            border-color: var(--accent-chocolate);
-            box-shadow: 0 0 0 2px rgba(74, 55, 40, 0.1);
-        }
-        textarea {
-            resize: vertical;
-            min-height: 80px;
+            gap: 0.5rem;
         }
         .priority-toggle {
             display: flex;
-            gap: 12px;
-            margin-top: 6px;
+            gap: 0.75rem;
+            margin: 0.5rem 0 1rem;
         }
         .priority-btn {
             flex: 1;
             background: transparent;
             border: 1px solid var(--border-light);
             border-radius: 40px;
-            padding: 0.6rem 0;
-            font-family: monospace;
-            font-weight: 500;
+            padding: 0.6rem;
+            font-family: var(--font-mono);
             font-size: 0.8rem;
-            color: var(--text-secondary);
+            font-weight: 500;
             cursor: pointer;
             transition: var(--transition);
-            text-align: center;
         }
         .priority-btn.active {
             background: var(--accent-chocolate);
             border-color: var(--accent-chocolate);
-            color: #fef7ed;
+            color: white;
         }
         .btn-submit {
             width: 100%;
             background: var(--accent-chocolate);
-            color: #fef5e8;
+            color: white;
             border: none;
             border-radius: 40px;
-            padding: 0.8rem;
-            font-family: monospace;
-            font-size: 0.9rem;
+            padding: 0.85rem;
             font-weight: 600;
-            cursor: pointer;
-            transition: var(--transition);
             margin-top: 0.5rem;
-        }
-        .btn-submit:hover {
-            background: #2f2118;
-            transform: translateY(-1px);
+            cursor: pointer;
         }
 
-        .tasks-panel {
-            background: var(--card-bg);
-            border: 1px solid var(--border-light);
-            border-radius: 24px;
-            padding: 1.6rem;
-            box-shadow: var(--shadow-sm);
-        }
         .stats-row {
             display: flex;
             gap: 1rem;
-            margin-bottom: 1.8rem;
+            margin-bottom: 2rem;
             flex-wrap: wrap;
         }
         .stat-card {
-            flex: 1;
             background: #fefaf5;
-            border-radius: 20px;
-            padding: 1rem 0.8rem;
+            border-radius: 24px;
+            padding: 1rem;
             text-align: center;
+            flex: 1;
             border: 1px solid var(--border-light);
-            transition: var(--transition);
         }
         .stat-number {
-            font-size: 2rem;
-            font-weight: 600;
+            font-size: 2.2rem;
+            font-weight: 700;
             color: var(--accent-chocolate);
-            line-height: 1.2;
-        }
-        .stat-label {
-            font-size: 0.7rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            color: var(--text-secondary);
-            margin-top: 0.3rem;
         }
         .filter-tabs {
             display: flex;
             gap: 0.5rem;
-            flex-wrap: wrap;
             margin-bottom: 1.8rem;
-            border-bottom: 1px solid var(--border-light);
-            padding-bottom: 0.8rem;
+            flex-wrap: wrap;
         }
         .tab-btn {
             background: transparent;
             border: none;
-            font-family: monospace;
-            font-size: 0.85rem;
             padding: 0.5rem 1.2rem;
-            border-radius: 100px;
-            color: var(--text-secondary);
+            border-radius: 40px;
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
             cursor: pointer;
             transition: var(--transition);
         }
         .tab-btn.active {
             background: var(--accent-chocolate);
-            color: #fff7ed;
+            color: white;
         }
         .tasks-list {
             display: flex;
             flex-direction: column;
             gap: 1rem;
-            min-height: 280px;
         }
         .task-card {
             background: #fefcf8;
             border: 1px solid var(--border-light);
             border-radius: 20px;
-            padding: 1rem;
+            padding: 1.2rem;
             transition: var(--transition);
-            animation: fadeSlideUp 0.2s ease-out;
-            box-shadow: var(--shadow-sm);
-            display: flex;
-            flex-direction: column;
-            gap: 0.7rem;
+            animation: fadeIn 0.2s ease;
         }
         .task-card:hover {
             transform: translateY(-2px);
             box-shadow: var(--shadow-hover);
-            border-color: #d6ccbc;
         }
         .task-card.priority-high { border-left: 4px solid var(--priority-high); }
         .task-card.priority-medium { border-left: 4px solid var(--priority-medium); }
@@ -298,435 +312,510 @@
             display: flex;
             justify-content: space-between;
             align-items: flex-start;
-            flex-wrap: wrap;
-            gap: 0.5rem;
+            margin-bottom: 0.5rem;
         }
         .task-title {
-            font-weight: 600;
-            font-size: 1.05rem;
-            color: var(--accent-chocolate);
+            font-weight: 700;
+            font-size: 1rem;
         }
         .task-priority-badge {
             font-size: 0.7rem;
-            background: #f3ede5;
+            background: #f0e8df;
             padding: 0.2rem 0.7rem;
-            border-radius: 40px;
-            color: var(--text-secondary);
+            border-radius: 20px;
         }
         .task-description {
             font-size: 0.85rem;
-            color: #4f3f31;
-            line-height: 1.4;
+            color: var(--text-secondary);
+            margin: 0.5rem 0;
         }
         .task-meta {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            flex-wrap: wrap;
-            gap: 0.75rem;
+            margin-top: 0.75rem;
         }
         .status-select {
-            background: #fffaf2;
+            background: white;
             border: 1px solid var(--border-light);
             border-radius: 30px;
             padding: 0.3rem 0.7rem;
-            font-size: 0.75rem;
-            font-family: monospace;
-            cursor: pointer;
-            color: var(--text-primary);
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
         }
         .delete-btn {
-            background: transparent;
+            background: none;
             border: none;
-            font-family: monospace;
-            font-size: 0.8rem;
-            color: #9b7e66;
+            font-family: var(--font-mono);
+            color: var(--accent-soft);
             cursor: pointer;
-            transition: var(--transition);
-            padding: 0.2rem 0.5rem;
-            border-radius: 30px;
+            font-size: 0.75rem;
         }
         .delete-btn:hover {
-            color: #c95a4a;
-            background: #f9ece8;
-        }
-        .error-banner {
-            background: var(--error-bg);
-            border-left: 4px solid var(--error-border);
-            border-radius: 16px;
-            padding: 0.8rem 1rem;
-            margin-bottom: 1.2rem;
-            font-size: 0.8rem;
             color: var(--error-text);
-            display: flex;
-            align-items: center;
-            gap: 8px;
         }
-        .loader-message, .empty-message {
+        .footer {
+            margin-top: 3rem;
             text-align: center;
-            padding: 2rem;
-            color: var(--text-secondary);
-            font-size: 0.8rem;
-        }
-        .empty-message {
-            background: #fefaf5;
-            border-radius: 32px;
-            color: #a28f7a;
-            font-style: italic;
-        }
-        .status-footer {
-            margin-top: 2rem;
-            border-top: 1px solid var(--border-light);
-            padding-top: 1.2rem;
             font-size: 0.7rem;
             color: var(--text-secondary);
-            text-align: center;
-            font-family: monospace;
+            border-top: 1px solid var(--border-light);
+            padding-top: 1.5rem;
+            font-family: var(--font-mono);
         }
-        @keyframes fadeSlideUp {
-            from { opacity: 0; transform: translateY(8px); }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(6px); }
             to { opacity: 1; transform: translateY(0); }
         }
         @media (max-width: 780px) {
             body { padding: 1rem; }
             .dashboard-grid { grid-template-columns: 1fr; gap: 1.5rem; }
-            .hero-left h1 { font-size: 1.5rem; }
         }
     </style>
 </head>
 <body>
 <div class="app-container">
-    <div class="hero">
-        <div class="hero-left">
-            <h1>📋 AlmaU Task Tracker <span>v.dashboard</span></h1>
-            <div class="hero-sub">управление задачами • приоритеты • ролевой доступ</div>
-        </div>
-        <div>
-            <select id="roleSelector" class="role-selector">
-                <option value="admin">👑 Администратор</option>
-                <option value="employee">👤 Сотрудник</option>
-            </select>
+    <div id="authBlock">
+        <div class="auth-wrapper">
+            <div class="auth-card">
+                <div class="auth-tabs">
+                    <button class="auth-tab active" data-tab="login">Вход</button>
+                    <button class="auth-tab" data-tab="register">Регистрация</button>
+                </div>
+                <div id="loginForm">
+                    <div class="input-group">
+                        <label>EMAIL</label>
+                        <input type="email" id="loginEmail" placeholder="ali@almau.kz">
+                    </div>
+                    <div class="input-group">
+                        <label>ПАРОЛЬ</label>
+                        <input type="password" id="loginPassword" placeholder="••••••">
+                    </div>
+                    <button class="btn-primary" id="doLoginBtn">Войти</button>
+                    <div id="loginError" class="error-banner" style="display: none;"></div>
+                </div>
+                <div id="registerForm" style="display: none;">
+                    <div class="input-group">
+                        <label>ИМЯ ПОЛЬЗОВАТЕЛЯ</label>
+                        <input type="text" id="regUsername" placeholder="Алибек">
+                    </div>
+                    <div class="input-group">
+                        <label>EMAIL</label>
+                        <input type="email" id="regEmail" placeholder="user@almau.kz">
+                    </div>
+                    <div class="input-group">
+                        <label>ПАРОЛЬ</label>
+                        <input type="password" id="regPassword" placeholder="••••••">
+                    </div>
+                    <button class="btn-primary" id="doRegisterBtn">Зарегистрироваться</button>
+                    <div id="regError" class="error-banner" style="display: none;"></div>
+                </div>
+            </div>
         </div>
     </div>
 
-    <div class="dashboard-grid">
-        <div id="leftPanelContainer">
-            <div id="createTaskForm" class="create-card">
-                <div class="form-title">✎ Новая задача</div>
-                <div class="input-group">
-                    <label>НАЗВАНИЕ</label>
-                    <input type="text" id="taskTitleInput" placeholder="например: Подготовить отчёт" autocomplete="off">
-                </div>
-                <div class="input-group">
-                    <label>ОПИСАНИЕ</label>
-                    <textarea id="taskDescInput" placeholder="детали, контекст, дедлайны..."></textarea>
-                </div>
-                <div class="input-group">
+    <div id="mainBlock" class="hidden">
+        <div class="main-header">
+            <div class="logo">
+                <h1>📋 AlmaU Task Tracker</h1>
+                <p>управление задачами • приоритеты • роли</p>
+            </div>
+            <div class="user-info">
+                <span id="userEmailSpan"></span>
+                <button class="logout-btn" id="logoutBtn">Выйти</button>
+            </div>
+        </div>
+        <div class="dashboard-grid">
+            <div id="leftPanel">
+                <div id="adminForm" class="create-card">
+                    <div class="form-title">✎ Новая задача</div>
+                    <div class="input-group">
+                        <label>НАЗВАНИЕ</label>
+                        <input type="text" id="taskTitle" placeholder="Например: Подготовить отчёт">
+                    </div>
+                    <div class="input-group">
+                        <label>ОПИСАНИЕ</label>
+                        <textarea id="taskDesc" rows="3" style="resize: vertical; width: 100%; border-radius: 20px; border: 1px solid var(--border-light); padding: 0.7rem;"></textarea>
+                    </div>
+                    <!-- ДОБАВЛЕНО: Выбор сотрудника -->
+                    <div class="input-group">
+                        <label>НАЗНАЧИТЬ СОТРУДНИКУ</label>
+                        <select id="assignedUserId">
+                            <option value="">-- Выберите сотрудника (оставьте пустым для себя) --</option>
+                        </select>
+                    </div>
                     <label>ПРИОРИТЕТ</label>
-                    <div class="priority-toggle" id="priorityToggle">
+                    <div class="priority-toggle">
                         <button type="button" data-priority="Low" class="priority-btn">LOW</button>
                         <button type="button" data-priority="Medium" class="priority-btn active">MEDIUM</button>
                         <button type="button" data-priority="High" class="priority-btn">HIGH</button>
                     </div>
+                    <button class="btn-submit" id="createTaskBtn">➕ Создать</button>
                 </div>
-                <button class="btn-submit" id="createTaskBtn">➕ СОЗДАТЬ ЗАДАЧУ</button>
+                <div id="employeePlaceholder" class="employee-placeholder hidden">
+                    <span>🔒</span>
+                    <p>Доступно только для Администратора<br>Создание и удаление задач требуют прав администратора.</p>
+                </div>
             </div>
-            <div id="employeePlaceholder" class="employee-placeholder" style="display: none;">
-                <span>🔒</span>
-                <p>Доступно только для Администратора<br>Создание и удаление задач требуют прав администратора.</p>
-            </div>
-        </div>
-
-        <div class="tasks-panel">
-            <!-- Панель статистики (динамическая) -->
-            <div class="stats-row" id="statsPanel">
-                <div class="stat-card"><div class="stat-number" id="totalTasksCount">0</div><div class="stat-label">Всего задач</div></div>
-                <div class="stat-card"><div class="stat-number" id="inProgressCount">0</div><div class="stat-label">В работе (In Progress)</div></div>
-                <div class="stat-card"><div class="stat-number" id="doneCount">0</div><div class="stat-label">Выполнено (Done)</div></div>
-            </div>
-
-            <div class="filter-tabs" id="filterTabs">
-                <button data-filter="All" class="tab-btn active">Все</button>
-                <button data-filter="New" class="tab-btn">New</button>
-                <button data-filter="In Progress" class="tab-btn">In Progress</button>
-                <button data-filter="Done" class="tab-btn">Done</button>
-            </div>
-            <div id="globalErrorContainer"></div>
-            <div id="tasksList" class="tasks-list">
-                <div class="loader-message">⟳ СИНХРОНИЗАЦИЯ С СЕРВЕРОМ...</div>
+            <div class="tasks-panel" style="background: var(--card-bg); border-radius: 28px; padding: 1.8rem; border: 1px solid var(--border-light);">
+                <div class="stats-row">
+                    <div class="stat-card"><div class="stat-number" id="totalCount">0</div><div class="stat-label">Всего задач</div></div>
+                    <div class="stat-card"><div class="stat-number" id="inProgressCount">0</div><div class="stat-label">В работе</div></div>
+                    <div class="stat-card"><div class="stat-number" id="doneCount">0</div><div class="stat-label">Выполнено</div></div>
+                </div>
+                <div class="filter-tabs">
+                    <button data-filter="All" class="tab-btn active">Все</button>
+                    <button data-filter="New" class="tab-btn">New</button>
+                    <button data-filter="In Progress" class="tab-btn">In Progress</button>
+                    <button data-filter="Done" class="tab-btn">Done</button>
+                </div>
+                <div id="tasksList" class="tasks-list">
+                    <div class="stat-card" style="text-align: center;">Загрузка задач...</div>
+                </div>
             </div>
         </div>
-    </div>
-
-    <div class="status-footer">
-        CORE: FastAPI v7.0 // STATION: LOCALHOST // DATABASE: SQLITE_READY
+        <div class="footer">CORE: FastAPI v7.0 // STATION: LOCALHOST // DATABASE: SQLITE_READY</div>
     </div>
 </div>
 
 <script>
-    const API_BASE = 'http://127.0.0.1:8000/tasks';
-    let tasksArray = [];           // все задачи
+    const API_BASE = 'http://127.0.0.1:8000';
+    let currentUser = null;
+    let tasksArray = [];
     let currentFilter = 'All';
     let selectedPriority = 'Medium';
-    let userRole = 'admin';        // 'admin' или 'employee'
 
-    const tasksContainer = document.getElementById('tasksList');
-    const errorContainer = document.getElementById('globalErrorContainer');
-    const titleInput = document.getElementById('taskTitleInput');
-    const descInput = document.getElementById('taskDescInput');
-    const createBtn = document.getElementById('createTaskBtn');
-    const priorityBtns = document.querySelectorAll('.priority-btn');
-    const filterTabs = document.querySelectorAll('.tab-btn');
-    const roleSelector = document.getElementById('roleSelector');
-    const createTaskFormDiv = document.getElementById('createTaskForm');
-    const employeePlaceholderDiv = document.getElementById('employeePlaceholder');
-    const totalTasksSpan = document.getElementById('totalTasksCount');
-    const inProgressSpan = document.getElementById('inProgressCount');
-    const doneSpan = document.getElementById('doneCount');
+    const authBlock = document.getElementById('authBlock');
+    const mainBlock = document.getElementById('mainBlock');
+    const loginFormDiv = document.getElementById('loginForm');
+    const registerFormDiv = document.getElementById('registerForm');
+    const authTabs = document.querySelectorAll('.auth-tab');
+    const loginBtn = document.getElementById('doLoginBtn');
+    const registerBtn = document.getElementById('doRegisterBtn');
+    const logoutBtn = document.getElementById('logoutBtn');
+    const userEmailSpan = document.getElementById('userEmailSpan');
 
-    function updateStatistics() {
-        const total = tasksArray.length;
-        const inProgress = tasksArray.filter(t => t.status === 'In Progress').length;
-        const done = tasksArray.filter(t => t.status === 'Done').length;
-        totalTasksSpan.textContent = total;
-        inProgressSpan.textContent = inProgress;
-        doneSpan.textContent = done;
-    }
-
-    function applyRoleBasedUI() {
-        if (userRole === 'admin') {
-            createTaskFormDiv.style.display = 'block';
-            employeePlaceholderDiv.style.display = 'none';
-        } else {
-            createTaskFormDiv.style.display = 'none';
-            employeePlaceholderDiv.style.display = 'flex';
-        }
-    }
-
-    function initRoleSwitcher() {
-        roleSelector.addEventListener('change', (e) => {
-            userRole = e.target.value;
-            applyRoleBasedUI();
-        });
-    }
-
-    function showError(message) {
-        errorContainer.innerHTML = `<div class="error-banner">⚠️ ${message}</div>`;
-        setTimeout(() => {
-            if (errorContainer.innerHTML.includes(message)) errorContainer.innerHTML = '';
-        }, 5000);
-    }
-
-    function clearError() { errorContainer.innerHTML = ''; }
-
-    function setLoadingState(isLoading, customMessage = "СИНХРОНИЗАЦИЯ С СЕРВЕРОМ...") {
-        if (isLoading) tasksContainer.innerHTML = `<div class="loader-message">⟳ ${customMessage}</div>`;
-    }
-
-    function escapeHtml(str) {
-        if (!str) return '';
-        return str.replace(/[&<>]/g, function(m) {
-            if (m === '&') return '&amp;';
-            if (m === '<') return '&lt;';
-            if (m === '>') return '&gt;';
-            return m;
-        });
-    }
-
-    function renderTasks() {
-        let filteredTasks = tasksArray;
-        if (currentFilter !== 'All') {
-            filteredTasks = tasksArray.filter(task => task.status === currentFilter);
-        }
-        if (filteredTasks.length === 0) {
-            tasksContainer.innerHTML = `<div class="empty-message">📭 НЕТ ЗАДАЧ. СОЗДАЙТЕ НОВУЮ.</div>`;
-            updateStatistics();
-            return;
-        }
-        const tasksHtml = filteredTasks.map(task => {
-            let priorityClass = '';
-            if (task.priority === 'High') priorityClass = 'priority-high';
-            else if (task.priority === 'Medium') priorityClass = 'priority-medium';
-            else priorityClass = 'priority-low';
-            const priorityText = task.priority === 'High' ? '🔴 HIGH' : (task.priority === 'Medium' ? '🟠 MEDIUM' : '🟢 LOW');
-            return `
-                <div class="task-card ${priorityClass}" data-task-id="${task.id}">
-                    <div class="task-header">
-                        <div class="task-title">${escapeHtml(task.title)}</div>
-                        <div class="task-priority-badge">${priorityText}</div>
-                    </div>
-                    <div class="task-description">${escapeHtml(task.description || '— без описания —')}</div>
-                    <div class="task-meta">
-                        <select class="status-select" data-id="${task.id}" data-current-status="${task.status}">
-                            <option value="New" ${task.status === 'New' ? 'selected' : ''}>🟡 New</option>
-                            <option value="In Progress" ${task.status === 'In Progress' ? 'selected' : ''}>⚙️ In Progress</option>
-                            <option value="Done" ${task.status === 'Done' ? 'selected' : ''}>✅ Done</option>
-                        </select>
-                        <button class="delete-btn" data-id="${task.id}">[ Удалить ]</button>
-                    </div>
-                </div>
-            `;
-        }).join('');
-        tasksContainer.innerHTML = tasksHtml;
-
-        document.querySelectorAll('.status-select').forEach(select => {
-            select.removeEventListener('change', handleStatusChange);
-            select.addEventListener('change', handleStatusChange);
-        });
-        document.querySelectorAll('.delete-btn').forEach(btn => {
-            btn.removeEventListener('click', handleDeleteClick);
-            btn.addEventListener('click', handleDeleteClick);
-        });
-        updateStatistics();   // пересчёт после любого рендера
-    }
-
-    async function handleStatusChange(event) {
-        const selectEl = event.target;
-        const taskId = parseInt(selectEl.getAttribute('data-id'));
-        const newStatus = selectEl.value;
-        const originalTask = tasksArray.find(t => t.id === taskId);
-        if (!originalTask || originalTask.status === newStatus) return;
-        const oldStatus = originalTask.status;
-        originalTask.status = newStatus;
-        renderTasks(); // оптимистичный рендер
-        try {
-            const response = await fetch(`${API_BASE}/${taskId}`, {
-                method: 'PATCH',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ status: newStatus })
-            });
-            if (!response.ok) throw new Error(`HTTP ${response.status}`);
-            const updated = await response.json();
-            const idx = tasksArray.findIndex(t => t.id === taskId);
-            if (idx !== -1 && updated) tasksArray[idx] = { ...tasksArray[idx], ...updated };
-            renderTasks();
-            clearError();
-        } catch (err) {
-            originalTask.status = oldStatus;
-            renderTasks();
-            showError(`Ошибка обновления статуса: ${err.message}. Сервер недоступен?`);
-        }
-    }
-
-    async function handleDeleteClick(event) {
-        const btn = event.target;
-        const taskId = parseInt(btn.getAttribute('data-id'));
-        if (!taskId) return;
-        // проверка роли: если сотрудник — удаление запрещено
-        if (userRole !== 'admin') {
-            showError("У вас недостаточно прав. Удаление задач доступно только Администратору.");
-            return;
-        }
-        try {
-            const response = await fetch(`${API_BASE}/${taskId}`, { method: 'DELETE' });
-            if (!response.ok && response.status !== 200 && response.status !== 204) {
-                throw new Error(`DELETE error ${response.status}`);
+    authTabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+            const target = tab.dataset.tab;
+            authTabs.forEach(t => t.classList.remove('active'));
+            tab.classList.add('active');
+            if (target === 'login') {
+                loginFormDiv.style.display = 'block';
+                registerFormDiv.style.display = 'none';
+            } else {
+                loginFormDiv.style.display = 'none';
+                registerFormDiv.style.display = 'block';
             }
-            await loadTasks(); // полная перезагрузка после удаления
-            clearError();
+        });
+    });
+
+    function showAuthError(msg, isLogin = true) {
+        const errDiv = isLogin ? document.getElementById('loginError') : document.getElementById('regError');
+        errDiv.textContent = msg;
+        errDiv.style.display = 'block';
+        setTimeout(() => errDiv.style.display = 'none', 5000);
+    }
+
+    async function handleRegister() {
+        const username = document.getElementById('regUsername').value.trim();
+        const email = document.getElementById('regEmail').value.trim();
+        const password = document.getElementById('regPassword').value.trim();
+        if (!username || !email || !password) {
+            showAuthError('Заполните все поля', false);
+            return;
+        }
+        try {
+            const resp = await fetch(`${API_BASE}/register`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username, email, password })
+            });
+            if (!resp.ok) {
+                const err = await resp.json();
+                throw new Error(err.detail || 'Ошибка регистрации');
+            }
+            const newUser = await resp.json();
+            alert('Регистрация успешна! Теперь войдите.');
+            document.querySelector('.auth-tab[data-tab="login"]').click();
+            document.getElementById('loginEmail').value = email;
+            document.getElementById('loginPassword').value = '';
         } catch (err) {
-            showError(`Не удалось удалить задачу. Связь с сервером потеряна: ${err.message}`);
+            showAuthError(err.message, false);
+        }
+    }
+
+    async function handleLogin() {
+        const email = document.getElementById('loginEmail').value.trim();
+        const password = document.getElementById('loginPassword').value.trim();
+        if (!email || !password) {
+            showAuthError('Введите email и пароль', true);
+            return;
+        }
+        try {
+            const resp = await fetch(`${API_BASE}/login`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, password })
+            });
+            if (!resp.ok) {
+                const err = await resp.json();
+                throw new Error(err.detail || 'Неверные учётные данные');
+            }
+            currentUser = await resp.json();
+            sessionStorage.setItem('currentUser', JSON.stringify(currentUser));
+            authBlock.classList.add('hidden');
+            mainBlock.classList.remove('hidden');
+            userEmailSpan.textContent = currentUser.email;
+            applyRoleUI();
+            // Загружаем список сотрудников для админа
+            if (currentUser.role === 'Admin') {
+                loadUsers();
+            }
+            await loadTasks();
+        } catch (err) {
+            showAuthError(err.message, true);
+        }
+    }
+
+    // ДОБАВЛЕНО: Загрузка списка сотрудников
+    async function loadUsers() {
+        if (!currentUser || currentUser.role !== 'Admin') return;
+        try {
+            const resp = await fetch(`${API_BASE}/users?user_id=${currentUser.id}`);
+            if (!resp.ok) throw new Error();
+            const users = await resp.json();
+            const select = document.getElementById('assignedUserId');
+            select.innerHTML = '<option value="">-- Выберите сотрудника (оставьте пустым для себя) --</option>' + 
+                users.filter(u => u.id !== currentUser.id).map(u => 
+                    `<option value="${u.id}">${u.username} (${u.email})</option>`
+                ).join('');
+        } catch (err) {
+            console.error('Ошибка загрузки сотрудников');
+        }
+    }
+
+    function handleLogout() {
+        currentUser = null;
+        sessionStorage.removeItem('currentUser');
+        authBlock.classList.remove('hidden');
+        mainBlock.classList.add('hidden');
+        tasksArray = [];
+    }
+
+    function applyRoleUI() {
+        const adminForm = document.getElementById('adminForm');
+        const empPlaceholder = document.getElementById('employeePlaceholder');
+        if (currentUser && currentUser.role === 'Admin') {
+            adminForm.classList.remove('hidden');
+            empPlaceholder.classList.add('hidden');
+        } else {
+            adminForm.classList.add('hidden');
+            empPlaceholder.classList.remove('hidden');
         }
     }
 
     async function loadTasks() {
-        setLoadingState(true, "СИНХРОНИЗАЦИЯ С СЕРВЕРОМ...");
-        clearError();
+        if (!currentUser) return;
         try {
-            const response = await fetch(API_BASE);
-            if (!response.ok) throw new Error(`HTTP ${response.status}`);
-            const data = await response.json();
-            if (Array.isArray(data)) {
-                tasksArray = data.map(task => ({
-                    id: task.id,
-                    title: task.title || 'Без названия',
-                    description: task.description || '',
-                    priority: task.priority || 'Medium',
-                    status: task.status || 'New'
-                }));
-            } else {
-                tasksArray = [];
-                throw new Error('Неверный формат ответа');
-            }
+            const resp = await fetch(`${API_BASE}/tasks?user_id=${currentUser.id}`);
+            if (!resp.ok) throw new Error();
+            tasksArray = await resp.json();
             renderTasks();
-        } catch (error) {
+            updateStats();
+        } catch (e) {
             tasksArray = [];
             renderTasks();
-            showError('⚠️ СВЯЗЬ С СЕРВЕРОМ ПОТЕРЯНА. Включите Uvicorn на порту 8000');
+            showMessage('Ошибка загрузки задач. Сервер недоступен.', 'error');
         }
     }
 
-    async function createTask() {
-        if (userRole !== 'admin') {
-            showError("Доступ запрещён. Только администратор может создавать задачи.");
+    function renderTasks() {
+        let filtered = tasksArray;
+        if (currentFilter !== 'All') {
+            filtered = tasksArray.filter(t => t.status === currentFilter);
+        }
+        const container = document.getElementById('tasksList');
+        if (filtered.length === 0) {
+            container.innerHTML = '<div class="stat-card" style="text-align: center;">📭 Нет задач</div>';
             return;
         }
-        const title = titleInput.value.trim();
-        if (!title) {
-            showError('❌ Название задачи обязательно.');
-            return;
+        container.innerHTML = filtered.map(task => {
+            let priorityClass = '';
+            if (task.priority === 'High') priorityClass = 'priority-high';
+            else if (task.priority === 'Medium') priorityClass = 'priority-medium';
+            else priorityClass = 'priority-low';
+            const priorityText = task.priority === 'High' ? 'HIGH' : (task.priority === 'Medium' ? 'MEDIUM' : 'LOW');
+            return `
+                <div class="task-card ${priorityClass}">
+                    <div class="task-header">
+                        <div class="task-title">${escapeHtml(task.title)}</div>
+                        <div class="task-priority-badge">${priorityText}</div>
+                    </div>
+                    <div class="task-description">${escapeHtml(task.description || '—')}</div>
+                    <div class="task-meta">
+                        <select class="status-select" data-id="${task.id}">
+                            <option value="New" ${task.status === 'New' ? 'selected' : ''}>New</option>
+                            <option value="In Progress" ${task.status === 'In Progress' ? 'selected' : ''}>In Progress</option>
+                            <option value="Done" ${task.status === 'Done' ? 'selected' : ''}>Done</option>
+                        </select>
+                        ${currentUser.role === 'Admin' ? `<button class="delete-btn" data-id="${task.id}">[Удалить]</button>` : ''}
+                    </div>
+                </div>
+            `;
+        }).join('');
+        document.querySelectorAll('.status-select').forEach(sel => {
+            sel.removeEventListener('change', handleStatusChange);
+            sel.addEventListener('change', handleStatusChange);
+        });
+        if (currentUser.role === 'Admin') {
+            document.querySelectorAll('.delete-btn').forEach(btn => {
+                btn.removeEventListener('click', handleDelete);
+                btn.addEventListener('click', handleDelete);
+            });
         }
-        const description = descInput.value.trim();
-        const priority = selectedPriority;
-        const newTask = { title, description, priority, status: 'New' };
+    }
+
+    function updateStats() {
+        document.getElementById('totalCount').innerText = tasksArray.length;
+        document.getElementById('inProgressCount').innerText = tasksArray.filter(t => t.status === 'In Progress').length;
+        document.getElementById('doneCount').innerText = tasksArray.filter(t => t.status === 'Done').length;
+    }
+
+    async function handleStatusChange(e) {
+        const select = e.target;
+        const taskId = parseInt(select.dataset.id);
+        const newStatus = select.value;
+        const originalTask = tasksArray.find(t => t.id === taskId);
+        if (!originalTask || originalTask.status === newStatus) return;
+        const oldStatus = originalTask.status;
+        originalTask.status = newStatus;
+        renderTasks();
         try {
-            const response = await fetch(API_BASE, {
+            const resp = await fetch(`${API_BASE}/tasks/${taskId}`, {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ status: newStatus, user_id: currentUser.id })
+            });
+            if (!resp.ok) throw new Error();
+            const updated = await resp.json();
+            const idx = tasksArray.findIndex(t => t.id === taskId);
+            if (idx !== -1) tasksArray[idx] = { ...tasksArray[idx], ...updated };
+            renderTasks();
+            updateStats();
+        } catch (err) {
+            originalTask.status = oldStatus;
+            renderTasks();
+            showMessage('Не удалось обновить статус', 'error');
+        }
+    }
+
+    async function handleDelete(e) {
+        const taskId = parseInt(e.target.dataset.id);
+        if (!confirm('Удалить задачу?')) return;
+        try {
+            const resp = await fetch(`${API_BASE}/tasks/${taskId}?user_id=${currentUser.id}`, { method: 'DELETE' });
+            if (!resp.ok && resp.status !== 204) throw new Error();
+            await loadTasks();
+        } catch (err) {
+            showMessage('Ошибка удаления', 'error');
+        }
+    }
+
+    // ИЗМЕНЕНО: createTask теперь может назначать задачу другому сотруднику
+    async function createTask() {
+        if (!currentUser || currentUser.role !== 'Admin') return;
+        const title = document.getElementById('taskTitle').value.trim();
+        if (!title) {
+            showMessage('Введите название задачи', 'error');
+            return;
+        }
+        const description = document.getElementById('taskDesc').value.trim();
+        const assignedUserId = document.getElementById('assignedUserId').value;
+        // Если выбран сотрудник — назначаем ему, иначе текущему админу
+        const userId = assignedUserId ? parseInt(assignedUserId) : currentUser.id;
+        
+        const payload = {
+            title,
+            description,
+            priority: selectedPriority,
+            user_id: userId
+        };
+        try {
+            const resp = await fetch(`${API_BASE}/tasks`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(newTask)
+                body: JSON.stringify(payload)
             });
-            if (!response.ok) {
-                let detail = '';
-                try { const errData = await response.json(); detail = errData.detail || ''; } catch(e) {}
-                throw new Error(`Ошибка ${response.status}: ${detail}`);
-            }
-            titleInput.value = '';
-            descInput.value = '';
-            setActivePriority('Medium');
-            await loadTasks();   // обновляем список + статистика
-            clearError();
-        } catch (error) {
-            showError(`Ошибка создания: ${error.message}. Сервер недоступен.`);
+            if (!resp.ok) throw new Error();
+            document.getElementById('taskTitle').value = '';
+            document.getElementById('taskDesc').value = '';
+            // Сбрасываем выбор сотрудника
+            document.getElementById('assignedUserId').value = '';
+            await loadTasks();
+            showMessage('✅ Задача создана!', 'success');
+        } catch (err) {
+            showMessage('Ошибка создания задачи', 'error');
         }
     }
 
-    function setActivePriority(priority) {
-        selectedPriority = priority;
-        priorityBtns.forEach(btn => {
-            const p = btn.getAttribute('data-priority');
-            if (p === priority) btn.classList.add('active');
-            else btn.classList.remove('active');
-        });
+    function showMessage(msg, type = 'error') {
+        const container = document.getElementById('tasksList');
+        const errDiv = document.createElement('div');
+        errDiv.className = 'error-banner';
+        errDiv.textContent = msg;
+        container.prepend(errDiv);
+        setTimeout(() => errDiv.remove(), 3000);
     }
 
-    function initPriorityButtons() {
-        priorityBtns.forEach(btn => {
-            btn.addEventListener('click', () => setActivePriority(btn.getAttribute('data-priority')));
-        });
-        setActivePriority('Medium');
+    function escapeHtml(str) {
+        if (!str) return '';
+        return str.replace(/[&<>]/g, m => m === '&' ? '&amp;' : (m === '<' ? '&lt;' : '&gt;'));
     }
 
-    function initFilterTabs() {
-        filterTabs.forEach(tab => {
-            tab.addEventListener('click', () => {
-                const filterValue = tab.getAttribute('data-filter');
-                currentFilter = filterValue;
-                filterTabs.forEach(t => t.classList.remove('active'));
-                tab.classList.add('active');
-                renderTasks();   // перерисовка без запроса
+    function initUI() {
+        document.querySelectorAll('#adminForm .priority-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                selectedPriority = btn.dataset.priority;
+                document.querySelectorAll('#adminForm .priority-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
             });
         });
+        document.querySelectorAll('.filter-tabs .tab-btn').forEach(tab => {
+            tab.addEventListener('click', () => {
+                currentFilter = tab.dataset.filter;
+                document.querySelectorAll('.filter-tabs .tab-btn').forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                renderTasks();
+            });
+        });
+        document.getElementById('createTaskBtn').addEventListener('click', createTask);
+        loginBtn.addEventListener('click', handleLogin);
+        registerBtn.addEventListener('click', handleRegister);
+        logoutBtn.addEventListener('click', handleLogout);
     }
 
-    async function init() {
-        initPriorityButtons();
-        initFilterTabs();
-        initRoleSwitcher();
-        createBtn.addEventListener('click', createTask);
-        applyRoleBasedUI();        // установить видимость по умолчанию (admin)
-        await loadTasks();         // первая загрузка с индикатором
+    function checkAutoLogin() {
+        const saved = sessionStorage.getItem('currentUser');
+        if (saved) {
+            try {
+                currentUser = JSON.parse(saved);
+                authBlock.classList.add('hidden');
+                mainBlock.classList.remove('hidden');
+                userEmailSpan.textContent = currentUser.email;
+                applyRoleUI();
+                if (currentUser.role === 'Admin') {
+                    loadUsers();
+                }
+                loadTasks();
+            } catch(e) {}
+        }
     }
-    init();
+
+    initUI();
+    checkAutoLogin();
 </script>
 </body>
 </html>
+uvicorn app.main:app --reload
+http://127.0.0.1:8000/docs
