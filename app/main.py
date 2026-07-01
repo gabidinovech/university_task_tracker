@@ -26,12 +26,10 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# ─── Security ─────────────────────────────────────────────────────────────────
 SECRET_KEY = os.getenv("SECRET_KEY", "almau-secret-key-change-in-production")
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_HOURS = 24
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
@@ -51,7 +49,6 @@ def create_access_token(user_id: int) -> str:
     return jwt.encode(payload, SECRET_KEY, algorithm=ALGORITHM)
 
 
-# ─── DB ───────────────────────────────────────────────────────────────────────
 def get_db():
     db = SessionLocal()
     try:
@@ -60,7 +57,6 @@ def get_db():
         db.close()
 
 
-# ─── FRONTEND ─────────────────────────────────────────────────────────────────
 @app.get("/")
 def serve_frontend():
     return FileResponse(os.path.join(BASE_DIR, "index.html"))
@@ -71,7 +67,6 @@ def serve_css():
     return FileResponse(os.path.join(BASE_DIR, "style.css"))
 
 
-# ─── AUTH ─────────────────────────────────────────────────────────────────────
 @app.post("/register", response_model=schemas.UserResponse, status_code=201)
 def register(user_data: schemas.UserRegister, db: Session = Depends(get_db)):
     if db.query(models.User).filter(models.User.email == user_data.email).first():
@@ -100,6 +95,10 @@ def login(creds: schemas.UserLogin, db: Session = Depends(get_db)):
 # ─── TASKS ────────────────────────────────────────────────────────────────────
 @app.get("/tasks", response_model=List[schemas.TaskResponse])
 def get_tasks(user_id: int, db: Session = Depends(get_db)):
+    user = db.query(models.User).filter(models.User.id == user_id).first()
+    # Admin барлық тапсырмаларды көреді, User тек өзінікін
+    if user and user.role == "Admin":
+        return db.query(models.Task).all()
     return db.query(models.Task).filter(models.Task.user_id == user_id).all()
 
 
@@ -144,7 +143,6 @@ def delete_task(task_id: int, user_id: int, db: Session = Depends(get_db)):
     db.commit()
 
 
-# ─── USERS ────────────────────────────────────────────────────────────────────
 @app.get("/users", response_model=List[schemas.UserResponse])
 def get_users(user_id: int, db: Session = Depends(get_db)):
     current_user = db.query(models.User).filter(models.User.id == user_id).first()
@@ -153,7 +151,6 @@ def get_users(user_id: int, db: Session = Depends(get_db)):
     return db.query(models.User).all()
 
 
-# ─── DEPARTMENTS ──────────────────────────────────────────────────────────────
 @app.get("/departments")
 def get_departments(db: Session = Depends(get_db)):
     depts = db.query(models.Department).all()
@@ -188,7 +185,6 @@ def get_department_users_with_tasks(dept_id: int, db: Session = Depends(get_db))
     }
 
 
-# ─── SEED ─────────────────────────────────────────────────────────────────────
 @app.on_event("startup")
 def seed_database():
     db = SessionLocal()
